@@ -24,7 +24,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
               <Book size={20} />
               Learning Path
             </Link>
-            <Link href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
+            <Link href="/student/tutor" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
               <MessageCircle size={20} />
               AI Tutor
             </Link>

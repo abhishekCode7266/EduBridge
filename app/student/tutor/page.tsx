@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, Bot, User, Loader2, Globe } from 'lucide-react';
+import { Send, Bot, User, Loader2, Globe, Sparkles } from 'lucide-react';
 
 type Message = {
   id: string;
@@ -70,7 +70,13 @@ export default function AITutorPage() {
             <Bot size={24} />
           </div>
           <div>
-            <h2 className="text-base font-bold text-slate-900">EduBridge AI Tutor</h2>
+            <h2 className="text-base font-bold text-slate-900 flex items-center gap-2">
+              EduBridge AI Tutor
+              <span className="flex items-center gap-1 rounded-full bg-slate-200/50 px-2 py-0.5 text-[10px] font-semibold text-slate-600">
+                <Sparkles size={10} className="text-indigo-500" />
+                Powered by Gemini
+              </span>
+            </h2>
             <p className="text-xs text-slate-500">Multilingual Step-by-Step Helper</p>
           </div>
         </div>

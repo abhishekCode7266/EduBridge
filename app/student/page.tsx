@@ -81,9 +81,12 @@ export default function StudentDashboard() {
                     </div>
                     <div>
                       {!item.completed && (
-                        <button className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50">
-                          Start
-                        </button>
+                        <Link 
+                          href={`/student/lesson?topic=${encodeURIComponent(item.title)}`}
+                          className="rounded-md bg-white px-3 py-1.5 text-xs font-semibold text-slate-900 shadow-sm ring-1 ring-inset ring-slate-300 hover:bg-slate-50 inline-block"
+                        >
+                          Start AI Lesson
+                        </Link>
                       )}
                     </div>
                   </div>
