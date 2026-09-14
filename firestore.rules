@@ -26,8 +26,19 @@ service cloud.firestore {
 
     match /users/{userId} {
       allow get: if isSignedIn() && isValidId(userId) && request.auth.uid == userId;
+      // Allow teachers to read users to approve payments
+      allow read: if isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher';
       allow create: if isSignedIn() && isValidId(userId) && request.auth.uid == userId && isValidUser(incoming());
       allow update: if isSignedIn() && isValidId(userId) && request.auth.uid == userId && isValidUser(incoming()) && incoming().diff(existing()).affectedKeys().hasOnly(['name', 'hasPaid']);
+      // Allow teachers to update user paid status
+      allow update: if isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher';
+    }
+
+    match /payment_requests/{paymentId} {
+      // Students can create payment requests
+      allow create: if isSignedIn() && incoming().userId == request.auth.uid;
+      allow read: if isSignedIn() && (resource.data.userId == request.auth.uid || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher');
+      allow update: if isSignedIn() && get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'teacher';
     }
   }
 }

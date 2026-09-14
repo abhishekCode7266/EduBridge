@@ -11,14 +11,19 @@ export default function DevTools() {
 
   useEffect(() => {
     // Also allow enabling via URL parameter (e.g. ?dev=true)
-    const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get('dev') === 'true') {
-      localStorage.setItem('is_developer', 'true');
-      setIsDeveloper(true);
-    } else {
-      const devMode = localStorage.getItem('is_developer') === 'true';
-      setIsDeveloper(devMode);
-    }
+    const checkDevMode = () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('dev') === 'true') {
+        localStorage.setItem('is_developer', 'true');
+        if (!isDeveloper) setIsDeveloper(true);
+      } else {
+        const devMode = localStorage.getItem('is_developer') === 'true';
+        if (devMode !== isDeveloper) setIsDeveloper(devMode);
+      }
+    };
+    
+    // Check initially (delayed to avoid hydration mismatch and direct state updates in effect)
+    setTimeout(checkDevMode, 0);
     
     // Add global keyboard shortcut to toggle dev mode: Ctrl+Shift+D
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -35,11 +40,11 @@ export default function DevTools() {
     const handleBodyClick = (e: MouseEvent) => {
       clickCount++;
       if (clickCount >= 7) {
+        clickCount = 0;
         const newDevMode = !isDeveloper;
         localStorage.setItem('is_developer', newDevMode.toString());
         setIsDeveloper(newDevMode);
         alert(`Developer mode ${newDevMode ? 'enabled' : 'disabled'}`);
-        clickCount = 0;
       }
       clearTimeout(clickTimeout);
       clickTimeout = setTimeout(() => {
