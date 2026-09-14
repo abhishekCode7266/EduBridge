@@ -24,8 +24,9 @@ const nextConfig: NextConfig = {
     ],
   },
   // EduBridge repo ke liye routing aur CSS/JS asset paths
-  basePath: '/EduBridge',
-  assetPrefix: '/EduBridge',
+  // Using an environment variable so it doesn't break the local AI Studio preview
+  basePath: process.env.GITHUB_ACTIONS ? '/EduBridge' : '',
+  assetPrefix: process.env.GITHUB_ACTIONS ? '/EduBridge' : '',
   trailingSlash: true,
 
   transpilePackages: ['motion'],

@@ -1,8 +1,18 @@
+"use client";
+
 import Link from 'next/link';
-import { BookOpen, User, Home, Users, BarChart2, Bell } from 'lucide-react';
-import { MOCK_USER } from '@/lib/mock-data';
+import { BookOpen, User, Home, Users, BarChart2, Bell, LogOut } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 export default function TeacherLayout({ children }: { children: React.ReactNode }) {
+  const { user, logout, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Loading...</div>;
+  }
+
+  const userName = user?.name || "Teacher";
+
   return (
     <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar */}
@@ -15,7 +25,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
           <span className="ml-2 rounded-full bg-rose-100 px-2 py-0.5 text-xs font-medium text-rose-700">Teacher</span>
         </div>
         
-        <div className="flex-1 overflow-y-auto py-4">
+        <div className="flex-1 overflow-y-auto py-4 flex flex-col justify-between">
           <nav className="space-y-1 px-4">
             <Link href="/teacher" className="flex items-center gap-3 rounded-lg bg-indigo-50 px-3 py-2 text-indigo-700 font-medium">
               <Home size={20} />
@@ -30,6 +40,13 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
               Analytics
             </Link>
           </nav>
+
+          <div className="px-4 mt-8">
+             <button onClick={logout} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-rose-600 hover:bg-rose-50 font-medium transition-colors">
+              <LogOut size={20} />
+              Log Out
+             </button>
+          </div>
         </div>
         
         <div className="border-t p-4">
@@ -37,9 +54,9 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700">
               <User size={20} />
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-slate-900">{MOCK_USER.teacher.name}</span>
-              <span className="text-xs text-slate-500">Teacher</span>
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-semibold text-slate-900 truncate">{userName}</span>
+              <span className="text-xs text-slate-500 truncate">{user?.email || "teacher@edubridge.com"}</span>
             </div>
           </div>
         </div>

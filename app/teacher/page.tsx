@@ -107,6 +107,80 @@ export default function TeacherDashboard() {
               ))}
             </div>
           </div>
+
+          {/* Student Learning Progress Processing */}
+          <div className="rounded-2xl border bg-white p-6 shadow-sm overflow-hidden">
+            <h2 className="text-base font-bold text-slate-900 mb-6">Student Learning Progress</h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm text-slate-600">
+                <thead className="border-b bg-slate-50 text-xs uppercase text-slate-500">
+                  <tr>
+                    <th scope="col" className="px-4 py-3 font-medium">Student Name</th>
+                    <th scope="col" className="px-4 py-3 font-medium">Current Topic</th>
+                    <th scope="col" className="px-4 py-3 font-medium">Progress</th>
+                    <th scope="col" className="px-4 py-3 font-medium">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr className="hover:bg-slate-50">
+                    <td className="px-4 py-3 font-medium text-slate-900">Rahul Sharma</td>
+                    <td className="px-4 py-3">Algebra I</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-24 rounded-full bg-slate-200">
+                          <div className="h-2 rounded-full bg-indigo-500" style={{ width: '85%' }}></div>
+                        </div>
+                        <span className="text-xs">85%</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-emerald-600 font-medium">On Track</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="px-4 py-3 font-medium text-slate-900">Priya Patel</td>
+                    <td className="px-4 py-3">Photosynthesis</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-24 rounded-full bg-slate-200">
+                          <div className="h-2 rounded-full bg-indigo-500" style={{ width: '40%' }}></div>
+                        </div>
+                        <span className="text-xs">40%</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-emerald-600 font-medium">On Track</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="px-4 py-3 font-medium text-slate-900">Amit Kumar</td>
+                    <td className="px-4 py-3">Trigonometry</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-24 rounded-full bg-slate-200">
+                          <div className="h-2 rounded-full bg-rose-500" style={{ width: '25%' }}></div>
+                        </div>
+                        <span className="text-xs">25%</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-rose-600 font-medium">Struggling</td>
+                  </tr>
+                  <tr className="hover:bg-slate-50">
+                    <td className="px-4 py-3 font-medium text-slate-900">Neha Singh</td>
+                    <td className="px-4 py-3">World War II</td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="h-2 w-24 rounded-full bg-slate-200">
+                          <div className="h-2 rounded-full bg-amber-500" style={{ width: '60%' }}></div>
+                        </div>
+                        <span className="text-xs">60%</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-amber-600 font-medium">Needs Review</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <button className="w-full mt-4 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition-colors">
+              View Complete Progress Report
+            </button>
+          </div>
         </div>
 
         {/* Right Column - 1/3 */}

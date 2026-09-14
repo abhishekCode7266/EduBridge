@@ -1,8 +1,19 @@
+"use client";
+
 import Link from 'next/link';
-import { BookOpen, User, Home, Book, MessageCircle, BarChart, Settings, Wifi } from 'lucide-react';
-import { MOCK_USER } from '@/lib/mock-data';
+import { BookOpen, User, Home, Book, MessageCircle, BarChart, Settings, Wifi, LogOut, CheckCircle2 } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
+  const { user, logout, isLoading } = useAuth();
+
+  if (isLoading) {
+    return <div className="min-h-screen bg-slate-50 flex items-center justify-center">Loading...</div>;
+  }
+
+  // Ensure user exists and is a student, otherwise don't break layout but it should redirect shortly.
+  const userName = user?.name || "Student";
+  
   return (
     <div className="flex min-h-screen bg-slate-50">
       {/* Sidebar */}
@@ -14,7 +25,7 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
           <span className="text-xl font-bold text-slate-900">EduBridge</span>
         </div>
         
-        <div className="flex-1 overflow-y-auto py-4">
+        <div className="flex-1 overflow-y-auto py-4 flex flex-col justify-between">
           <nav className="space-y-1 px-4">
             <Link href="/student" className="flex items-center gap-3 rounded-lg bg-indigo-50 px-3 py-2 text-indigo-700 font-medium">
               <Home size={20} />
@@ -23,6 +34,10 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
             <Link href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
               <Book size={20} />
               Learning Path
+            </Link>
+            <Link href="/student/quiz" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
+              <CheckCircle2 size={20} />
+              AI Quiz Generator
             </Link>
             <Link href="/student/tutor" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
               <MessageCircle size={20} />
@@ -33,6 +48,13 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
               Progress
             </Link>
           </nav>
+
+          <div className="px-4 mt-8">
+             <button onClick={logout} className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-rose-600 hover:bg-rose-50 font-medium transition-colors">
+              <LogOut size={20} />
+              Log Out
+             </button>
+          </div>
         </div>
         
         <div className="border-t p-4">
@@ -40,9 +62,9 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-indigo-100 text-indigo-700">
               <User size={20} />
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-semibold text-slate-900">{MOCK_USER.student.name}</span>
-              <span className="text-xs text-slate-500">{MOCK_USER.student.grade} Grade</span>
+            <div className="flex flex-col min-w-0">
+              <span className="text-sm font-semibold text-slate-900 truncate">{userName}</span>
+              <span className="text-xs text-slate-500 truncate">{user?.email || "student@edubridge.com"}</span>
             </div>
           </div>
         </div>
@@ -52,12 +74,17 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
       <main className="flex-1 md:ml-64 flex flex-col min-h-screen">
         <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 justify-end">
           <div className="flex items-center gap-4">
+             {user?.hasPaid && (
+               <div className="flex items-center gap-1 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/20">
+                 PRO Plan Active
+               </div>
+             )}
              <div className="flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
                <Wifi size={14} />
                Online
              </div>
              <div className="flex items-center gap-2 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">
-               🔥 {MOCK_USER.student.learningStreak} Day Streak
+               🔥 14 Day Streak
              </div>
           </div>
         </header>
