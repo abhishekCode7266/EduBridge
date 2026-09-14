@@ -4,6 +4,7 @@ import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { ArrowLeft, BrainCircuit, Loader2 } from "lucide-react";
 import Markdown from "react-markdown";
+import FeedbackWidget from "@/components/FeedbackWidget";
 
 function SmartLessonContent() {
   const searchParams = useSearchParams();
@@ -68,7 +69,7 @@ function SmartLessonContent() {
         {isLoading ? (
           <div className="flex flex-col items-center justify-center h-64 space-y-4 text-indigo-600">
             <Loader2 className="animate-spin" size={40} />
-            <p className="text-slate-600 font-medium">Gemini is generating your personalized lesson on "{topic}"...</p>
+            <p className="text-slate-600 font-medium">Gemini is generating your personalized lesson on &quot;{topic}&quot;...</p>
           </div>
         ) : error ? (
           <div className="rounded-xl bg-rose-50 p-6 text-center border border-rose-100">
@@ -84,6 +85,10 @@ function SmartLessonContent() {
           <div className="prose prose-slate prose-indigo max-w-none">
             <div className="markdown-body">
               <Markdown>{content}</Markdown>
+            </div>
+            
+            <div className="mt-12 pt-8 border-t border-slate-100">
+              <FeedbackWidget context="AI Lesson" />
             </div>
           </div>
         )}

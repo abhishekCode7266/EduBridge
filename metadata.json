@@ -1,5 +1,5 @@
 {
-  "name": "EduBridge",
+  "name": "EduBridge AI Learning Platform",
   "description": "AI-driven, personalized learning platform identifying weak concepts and providing multilingual AI doubt solving.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

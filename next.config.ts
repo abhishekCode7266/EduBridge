@@ -6,13 +6,9 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   typescript: {
-    // Type errors ki wajah se build fail na ho
     ignoreBuildErrors: true,
   },
-  // GitHub Pages ke liye static HTML export zaroori hai
-  output: 'export',
   images: {
-    // GitHub Pages par server image optimization nahi chalta
     unoptimized: true,
     remotePatterns: [
       {
@@ -23,12 +19,9 @@ const nextConfig: NextConfig = {
       },
     ],
   },
-  // EduBridge repo ke liye routing aur CSS/JS asset paths
-  // Using an environment variable so it doesn't break the local AI Studio preview
   basePath: process.env.GITHUB_ACTIONS ? '/EduBridge' : '',
   assetPrefix: process.env.GITHUB_ACTIONS ? '/EduBridge' : '',
   trailingSlash: true,
-
   transpilePackages: ['motion'],
   webpack: (config, {dev}) => {
     if (dev && process.env.DISABLE_HMR === 'true') {
@@ -39,5 +32,4 @@ const nextConfig: NextConfig = {
     return config;
   },
 };
-
 export default nextConfig;

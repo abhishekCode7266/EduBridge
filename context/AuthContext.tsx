@@ -2,6 +2,14 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { auth, db } from '@/lib/firebase';
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword, 
+  signOut as firebaseSignOut,
+  onAuthStateChanged 
+} from 'firebase/auth';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export type User = {
   id: string;
@@ -27,77 +35,101 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Check local storage for existing session on mount
-    const storedUser = localStorage.getItem('edubridge_user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
-    setIsLoading(false);
+    // Check if we are using the local dev bypass
+    const isDevBypass = typeof window !== 'undefined' ? localStorage.getItem('dev_bypass') === 'true' : false;
+    const isTeacherBypass = typeof window !== 'undefined' ? localStorage.getItem('teacher_bypass') === 'true' : false;
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (isDevBypass) {
+        setUser({
+          id: 'dev-admin-123',
+          name: 'Dev Student',
+          email: 'admin@edubridge.demo',
+          role: 'student',
+          hasPaid: false, // Set to false to see the free trial state
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      if (isTeacherBypass) {
+        setUser({
+          id: 'dev-teacher-123',
+          name: 'Dev Teacher',
+          email: 'teacher@edubridge.demo',
+          role: 'teacher',
+          hasPaid: true,
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      if (firebaseUser) {
+        try {
+          const docRef = doc(db, 'users', firebaseUser.uid);
+          const docSnap = await getDoc(docRef);
+          
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setUser({
+              id: firebaseUser.uid,
+              name: data.name,
+              email: data.email,
+              role: data.role,
+              hasPaid: data.hasPaid,
+            });
+          } else {
+            // User exists in auth but no profile in firestore
+            setUser(null);
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, pass: string) => {
-    // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 800));
+    const userCredential = await signInWithEmailAndPassword(auth, email, pass);
+    const docRef = doc(db, 'users', userCredential.user.uid);
+    const docSnap = await getDoc(docRef);
     
-    // Check against "database" (localStorage)
-    const usersDb = JSON.parse(localStorage.getItem('edubridge_db') || '[]');
-    const foundUser = usersDb.find((u: any) => u.email === email && u.password === pass);
-
-    if (!foundUser) {
-      throw new Error('Invalid email or password');
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      router.push(`/${data.role}`);
+    } else {
+      throw new Error("User profile not found in database.");
     }
-
-    const sessionUser: User = {
-      id: foundUser.id,
-      name: foundUser.name,
-      email: foundUser.email,
-      role: foundUser.role,
-      hasPaid: foundUser.hasPaid,
-    };
-
-    setUser(sessionUser);
-    localStorage.setItem('edubridge_user', JSON.stringify(sessionUser));
-    
-    router.push(`/${sessionUser.role}`);
   };
 
   const register = async (name: string, email: string, pass: string, role: 'student' | 'teacher', hasPaid: boolean) => {
-    await new Promise(resolve => setTimeout(resolve, 800));
+    const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
+    const uid = userCredential.user.uid;
     
-    const usersDb = JSON.parse(localStorage.getItem('edubridge_db') || '[]');
-    if (usersDb.find((u: any) => u.email === email)) {
-      throw new Error('Email already exists');
-    }
-
-    const newUser = {
-      id: Date.now().toString(),
+    // Create user profile in Firestore
+    await setDoc(doc(db, 'users', uid), {
       name,
       email,
-      password: pass,
       role,
       hasPaid
-    };
+    });
 
-    usersDb.push(newUser);
-    localStorage.setItem('edubridge_db', JSON.stringify(usersDb));
-
-    const sessionUser: User = {
-      id: newUser.id,
-      name: newUser.name,
-      email: newUser.email,
-      role: newUser.role,
-      hasPaid: newUser.hasPaid,
-    };
-
-    setUser(sessionUser);
-    localStorage.setItem('edubridge_user', JSON.stringify(sessionUser));
-    
     router.push(`/${role}`);
   };
 
-  const logout = () => {
+  const logout = async () => {
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem('dev_bypass');
+      localStorage.removeItem('teacher_bypass');
+    }
+    await firebaseSignOut(auth);
     setUser(null);
-    localStorage.removeItem('edubridge_user');
     router.push('/login');
   };
 

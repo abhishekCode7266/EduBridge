@@ -16,7 +16,7 @@ function LoginContent() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { login, register } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -28,6 +28,38 @@ function LoginContent() {
     } catch (err: any) {
       setError(err.message || "Failed to login. Please try again or create an account.");
     } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDevLogin = async () => {
+    setError("");
+    setIsSubmitting(true);
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('dev_bypass', 'true');
+        localStorage.removeItem('teacher_bypass');
+      }
+      // Force reload the page so the AuthContext picks up the new local storage value
+      window.location.href = '/student';
+    } catch (err: any) {
+      setError(err.message || "Failed to create dev account.");
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleTeacherDevLogin = async () => {
+    setError("");
+    setIsSubmitting(true);
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.setItem('teacher_bypass', 'true');
+        localStorage.removeItem('dev_bypass');
+      }
+      // Force reload the page so the AuthContext picks up the new local storage value
+      window.location.href = '/teacher';
+    } catch (err: any) {
+      setError(err.message || "Failed to create teacher dev account.");
       setIsSubmitting(false);
     }
   };
@@ -102,9 +134,38 @@ function LoginContent() {
             Sign in
           </button>
         </div>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center" aria-hidden="true">
+            <div className="w-full border-t border-slate-200" />
+          </div>
+          <div className="relative flex justify-center">
+            <span className="bg-white px-2 text-sm text-slate-500">or</span>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-3">
+          <button
+            type="button"
+            onClick={handleDevLogin}
+            disabled={isSubmitting}
+            className="flex w-full justify-center items-center gap-2 rounded-lg bg-slate-100 px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-200 border border-slate-200 disabled:opacity-70"
+          >
+            Student Developer Bypass (Testing Only)
+          </button>
+
+          <button
+            type="button"
+            onClick={handleTeacherDevLogin}
+            disabled={isSubmitting}
+            className="flex w-full justify-center items-center gap-2 rounded-lg bg-indigo-50 px-3 py-2.5 text-sm font-semibold text-indigo-700 shadow-sm hover:bg-indigo-100 border border-indigo-200 disabled:opacity-70"
+          >
+            Teacher Developer Bypass (Testing Only)
+          </button>
+        </div>
         
         <p className="text-center text-sm text-slate-600">
-          Don't have an account?{' '}
+          Don&apos;t have an account?{' '}
           <Link href="/register" className="font-semibold text-indigo-600 hover:text-indigo-500">
             Sign up and Join
           </Link>

@@ -3,7 +3,7 @@ import './globals.css';
 import { Providers } from './providers';
 
 export const metadata: Metadata = {
-  title: 'EduBridge - AI Personalized Learning',
+  title: 'EduBridge AI Learning Platform',
   description: 'AI-driven, personalized learning platform identifying weak concepts and providing multilingual AI doubt solving.',
 };
 

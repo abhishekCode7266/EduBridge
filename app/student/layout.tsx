@@ -1,7 +1,7 @@
 "use client";
 
 import Link from 'next/link';
-import { BookOpen, User, Home, Book, MessageCircle, BarChart, Settings, Wifi, LogOut, CheckCircle2 } from 'lucide-react';
+import { BookOpen, User, Home, Book, MessageCircle, BarChart, Settings, Wifi, LogOut, CheckCircle2, Gamepad2 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 
 export default function StudentLayout({ children }: { children: React.ReactNode }) {
@@ -31,9 +31,9 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
               <Home size={20} />
               Dashboard
             </Link>
-            <Link href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
+            <Link href="/student/coding" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
               <Book size={20} />
-              Learning Path
+              Coding Lab (Pro)
             </Link>
             <Link href="/student/quiz" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
               <CheckCircle2 size={20} />
@@ -42,6 +42,10 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
             <Link href="/student/tutor" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
               <MessageCircle size={20} />
               AI Tutor
+            </Link>
+            <Link href="/student/games" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
+              <Gamepad2 size={20} />
+              Game Center
             </Link>
             <Link href="#" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
               <BarChart size={20} />
@@ -74,9 +78,18 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
       <main className="flex-1 md:ml-64 flex flex-col min-h-screen">
         <header className="sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8 justify-end">
           <div className="flex items-center gap-4">
-             {user?.hasPaid && (
+             {user?.hasPaid ? (
                <div className="flex items-center gap-1 rounded-full bg-indigo-50 px-3 py-1 text-xs font-medium text-indigo-700 ring-1 ring-inset ring-indigo-600/20">
                  PRO Plan Active
+               </div>
+             ) : (
+               <div className="flex items-center gap-3">
+                 <div className="flex items-center gap-1 rounded-full bg-amber-50 px-3 py-1 text-xs font-medium text-amber-700 ring-1 ring-inset ring-amber-600/20">
+                   Free Trial
+                 </div>
+                 <Link href="/#pricing" className="text-xs font-bold text-indigo-600 hover:text-indigo-500 underline">
+                   Upgrade to Pro
+                 </Link>
                </div>
              )}
              <div className="flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-xs font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">

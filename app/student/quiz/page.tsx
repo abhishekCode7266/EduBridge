@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { BrainCircuit, Loader2, CheckCircle2, XCircle, ArrowRight } from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import LockedFeature from "@/components/LockedFeature";
+import FeedbackWidget from "@/components/FeedbackWidget";
 
 type Question = {
   question: string;
@@ -11,6 +14,7 @@ type Question = {
 };
 
 export default function AIQuizGenerator() {
+  const { user } = useAuth();
   const [step, setStep] = useState<'setup' | 'loading' | 'quiz' | 'results'>('setup');
   const [topic, setTopic] = useState("");
   const [difficulty, setDifficulty] = useState("Beginner");
@@ -22,6 +26,10 @@ export default function AIQuizGenerator() {
   const [showExplanation, setShowExplanation] = useState(false);
   
   const [error, setError] = useState("");
+
+  if (user && !user.hasPaid) {
+    return <LockedFeature featureName="AI Quiz Generator" />;
+  }
 
   const handleGenerateQuiz = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -141,7 +149,7 @@ export default function AIQuizGenerator() {
         <div className="rounded-2xl border bg-white p-16 shadow-sm flex flex-col items-center justify-center space-y-4">
           <Loader2 className="animate-spin text-indigo-600" size={48} />
           <h2 className="text-xl font-bold text-slate-900">Crafting your custom quiz...</h2>
-          <p className="text-slate-500">EduBridge AI is generating questions about "{topic}".</p>
+          <p className="text-slate-500">EduBridge AI is generating questions about &quot;{topic}&quot;.</p>
         </div>
       )}
 
@@ -236,6 +244,10 @@ export default function AIQuizGenerator() {
           >
             Generate Another Quiz
           </button>
+          
+          <div className="mt-10 pt-8 border-t border-slate-100">
+            <FeedbackWidget context="Quiz Quality" />
+          </div>
         </div>
       )}
     </div>

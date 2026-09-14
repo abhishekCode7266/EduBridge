@@ -1,0 +1,15 @@
+
+> ai-studio-applet@0.1.0 build
+> NODE_ENV=production next build
+
+   ▲ Next.js 15.5.25
+
+   Creating an optimized production build ...
+ ✓ Compiled successfully in 15.5s
+   Skipping validation of types
+   Skipping linting
+   Collecting page data ...
+unhandledRejection [Error [PageNotFoundError]: Cannot find module for page: /_document] {
+  type: 'PageNotFoundError',
+  code: 'ENOENT'
+}

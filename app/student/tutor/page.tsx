@@ -2,6 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react';
 import { Send, Bot, User, Loader2, Globe, Sparkles } from 'lucide-react';
+import { useAuth } from '@/context/AuthContext';
+import LockedFeature from '@/components/LockedFeature';
 
 type Message = {
   id: string;
@@ -10,6 +12,7 @@ type Message = {
 };
 
 export default function AITutorPage() {
+  const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -28,6 +31,10 @@ export default function AITutorPage() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
+
+  if (user && !user.hasPaid) {
+    return <LockedFeature featureName="AI Tutor" />;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
