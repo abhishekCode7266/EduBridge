@@ -38,6 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Check if we are using the local dev bypass
     const isDevBypass = typeof window !== 'undefined' ? localStorage.getItem('dev_bypass') === 'true' : false;
     const isTeacherBypass = typeof window !== 'undefined' ? localStorage.getItem('teacher_bypass') === 'true' : false;
+    const isDevPaidBypass = typeof window !== 'undefined' ? localStorage.getItem('dev_paid_bypass') === 'true' : false;
 
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
       if (isDevBypass) {
@@ -46,7 +47,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           name: 'Dev Student',
           email: 'admin@edubridge.demo',
           role: 'student',
-          hasPaid: false, // Set to false to see the free trial state
+          hasPaid: isDevPaidBypass, // Uses the dev toggle to see free or paid state
         });
         setIsLoading(false);
         return;

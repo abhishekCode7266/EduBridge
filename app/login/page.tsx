@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useState, Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { BookOpen, Loader2 } from "lucide-react";
 import Link from "next/link";
@@ -16,7 +16,13 @@ function LoginContent() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login, register } = useAuth();
+  const { login, register, user, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && user) {
+      router.push(`/${user.role}`);
+    }
+  }, [user, isLoading, router]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -142,26 +148,6 @@ function LoginContent() {
           <div className="relative flex justify-center">
             <span className="bg-white px-2 text-sm text-slate-500">or</span>
           </div>
-        </div>
-
-        <div className="flex flex-col gap-3">
-          <button
-            type="button"
-            onClick={handleDevLogin}
-            disabled={isSubmitting}
-            className="flex w-full justify-center items-center gap-2 rounded-lg bg-slate-100 px-3 py-2.5 text-sm font-semibold text-slate-700 shadow-sm hover:bg-slate-200 border border-slate-200 disabled:opacity-70"
-          >
-            Student Developer Bypass (Testing Only)
-          </button>
-
-          <button
-            type="button"
-            onClick={handleTeacherDevLogin}
-            disabled={isSubmitting}
-            className="flex w-full justify-center items-center gap-2 rounded-lg bg-indigo-50 px-3 py-2.5 text-sm font-semibold text-indigo-700 shadow-sm hover:bg-indigo-100 border border-indigo-200 disabled:opacity-70"
-          >
-            Teacher Developer Bypass (Testing Only)
-          </button>
         </div>
         
         <p className="text-center text-sm text-slate-600">

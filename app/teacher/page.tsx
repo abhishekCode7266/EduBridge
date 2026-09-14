@@ -295,7 +295,7 @@ export default function TeacherDashboard() {
         </div>
 
         {/* Right Column - 1/3 */}
-        <div>
+        <div className="space-y-6">
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
             <h2 className="text-base font-bold text-slate-900 mb-4">Struggling Students</h2>
             <p className="text-sm text-slate-500 mb-4">Based on AI knowledge gap detection</p>
@@ -318,6 +318,50 @@ export default function TeacherDashboard() {
             <button className="w-full mt-6 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-50">
               View All Students
             </button>
+          </div>
+
+          {/* Upcoming Classes */}
+          <div className="rounded-2xl border bg-white p-6 shadow-sm">
+            <h2 className="text-base font-bold text-slate-900 mb-4">Upcoming Classes</h2>
+            <div className="space-y-4">
+              <div className="flex items-start gap-4 border-l-2 border-indigo-500 pl-4">
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-slate-900">10th Science - Chemical Reactions</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Today, 10:00 AM • 45 Students</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 border-l-2 border-slate-300 pl-4">
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-slate-900">10th Math - Quadratic Equations</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Today, 1:30 PM • 42 Students</p>
+                </div>
+              </div>
+              <div className="flex items-start gap-4 border-l-2 border-slate-300 pl-4">
+                <div className="flex-1">
+                  <p className="text-sm font-semibold text-slate-900">Doubt Clearing Session</p>
+                  <p className="text-xs text-slate-500 mt-0.5">Tomorrow, 9:00 AM • Open for all</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Recent Activity */}
+          <div className="rounded-2xl border bg-white p-6 shadow-sm">
+            <h2 className="text-base font-bold text-slate-900 mb-4">Recent Activity</h2>
+            <div className="space-y-4 text-sm text-slate-600">
+              <div className="flex gap-3">
+                <span className="h-2 w-2 mt-1.5 rounded-full bg-emerald-500 flex-shrink-0"></span>
+                <p>Rahul Sharma completed quiz <span className="font-medium text-slate-900">Algebra I</span> with 85%.</p>
+              </div>
+              <div className="flex gap-3">
+                <span className="h-2 w-2 mt-1.5 rounded-full bg-indigo-500 flex-shrink-0"></span>
+                <p>You approved a Pro Payment for <span className="font-medium text-slate-900">Priya Patel</span>.</p>
+              </div>
+              <div className="flex gap-3">
+                <span className="h-2 w-2 mt-1.5 rounded-full bg-rose-500 flex-shrink-0"></span>
+                <p>AI identified <span className="font-medium text-slate-900">Amit Kumar</span> struggling with Trigonometry.</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
