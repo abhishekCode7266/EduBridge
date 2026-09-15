@@ -7,35 +7,52 @@ import LockedFeature from "@/components/LockedFeature";
 
 const ALL_GAMES = [
   // Coding Games
-  { id: "code-1", category: "Coding", title: "Syntax Snipper", desc: "Find the syntax error before time runs out.", icon: <Code size={20} />, locked: false, isPlayable: true },
-  { id: "code-2", category: "Coding", title: "Logic Blocks", desc: "Arrange the pseudocode to solve the algorithm.", icon: <Code size={20} />, locked: true, isPlayable: false },
-  { id: "code-3", category: "Coding", title: "Regex Racer", desc: "Match the strings with the right regex.", icon: <Code size={20} />, locked: true, isPlayable: false },
+  { id: "code-1", category: "Coding", title: "Syntax Snipper", desc: "Find the syntax error before time runs out. Spans from basic variables to advanced closures.", icon: <Code size={20} />, locked: false, isPlayable: true, levels: 500 },
+  { id: "code-2", category: "Coding", title: "Logic Blocks", desc: "Arrange the pseudocode to solve the algorithm. Learn structures over 500 levels.", icon: <Code size={20} />, locked: true, isPlayable: false, levels: 500 },
+  { id: "code-3", category: "Coding", title: "Regex Racer", desc: "Match the strings with the right regex. Become a regex master step-by-step.", icon: <Code size={20} />, locked: true, isPlayable: false, levels: 500 },
   
   // Learning / Math
-  { id: "learn-1", category: "Learning", title: "Math Sprint", desc: "Solve as many equations as possible in 60s.", icon: <Calculator size={20} />, locked: false, isPlayable: true },
-  { id: "learn-2", category: "Learning", title: "Vocab Builder", desc: "Match the advanced vocabulary words.", icon: <Brain size={20} />, locked: true, isPlayable: false },
-  { id: "learn-3", category: "Learning", title: "History Timeline", desc: "Drag events into the correct chronological order.", icon: <Brain size={20} />, locked: true, isPlayable: false },
-  { id: "learn-4", category: "Learning", title: "Science Sort", desc: "Categorize the elements and physics principles.", icon: <Brain size={20} />, locked: true, isPlayable: false },
+  { id: "learn-1", category: "Learning", title: "Math Sprint", desc: "Solve as many equations as possible in 60s. Progresses from addition to calculus.", icon: <Calculator size={20} />, locked: false, isPlayable: true, levels: 500 },
+  { id: "learn-2", category: "Learning", title: "Vocab Builder", desc: "Match the advanced vocabulary words. 500 levels of increasing difficulty.", icon: <Brain size={20} />, locked: true, isPlayable: false, levels: 500 },
+  { id: "learn-3", category: "Learning", title: "History Timeline", desc: "Drag events into the correct chronological order.", icon: <Brain size={20} />, locked: true, isPlayable: false, levels: 500 },
+  { id: "learn-4", category: "Learning", title: "Science Sort", desc: "Categorize the elements and physics principles. Covers 500 scientific concepts.", icon: <Brain size={20} />, locked: true, isPlayable: false, levels: 500 },
   
   // Casual
-  { id: "cas-1", category: "Casual", title: "Memory Match", desc: "Classic brain-training memory cards.", icon: <Gamepad2 size={20} />, locked: false, isPlayable: true },
-  { id: "cas-2", category: "Casual", title: "Focus Tic-Tac-Toe", desc: "Play against the AI tutor in Tic-Tac-Toe.", icon: <Gamepad2 size={20} />, locked: true, isPlayable: false },
-  { id: "cas-3", category: "Casual", title: "Breathing Break", desc: "A gamified meditation and focus reset.", icon: <Gamepad2 size={20} />, locked: true, isPlayable: false },
+  { id: "cas-1", category: "Casual", title: "Memory Match", desc: "Classic brain-training memory cards. Increases grid size and complexity over 500 levels.", icon: <Gamepad2 size={20} />, locked: false, isPlayable: true, levels: 500 },
+  { id: "cas-2", category: "Casual", title: "Focus Tic-Tac-Toe", desc: "Play against the AI tutor in Tic-Tac-Toe. The AI gets smarter up to level 500.", icon: <Gamepad2 size={20} />, locked: true, isPlayable: false, levels: 500 },
+  { id: "cas-3", category: "Casual", title: "Breathing Break", desc: "A gamified meditation and focus reset. 500 unique environments and patterns.", icon: <Gamepad2 size={20} />, locked: true, isPlayable: false, levels: 500 },
 ];
 
 export default function GamesPage() {
   const { user } = useAuth();
   const [activeGame, setActiveGame] = useState<string | null>(null);
+  const [currentLevel, setCurrentLevel] = useState<number>(1);
 
   if (user && !user.hasPaid && activeGame) {
     return <LockedFeature featureName="Interactive Games" />;
   }
 
+  const LevelSelector = () => (
+    <div className="absolute top-4 right-4 bg-white/80 backdrop-blur border border-slate-200 rounded-xl px-3 py-2 flex items-center gap-2 shadow-sm z-10">
+      <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Level</span>
+      <input 
+        type="number" 
+        min="1" 
+        max="500" 
+        value={currentLevel}
+        onChange={(e) => setCurrentLevel(Math.min(500, Math.max(1, parseInt(e.target.value) || 1)))}
+        className="w-16 font-bold text-indigo-700 bg-indigo-50 border-none rounded-lg text-center p-1 focus:ring-0 outline-none" 
+      />
+      <span className="text-xs font-medium text-slate-400">/ 500</span>
+    </div>
+  );
+
   // Very simple embedded math game
   const renderMathSprint = () => {
     // Basic state for demonstration
     return (
-      <div className="max-w-xl mx-auto text-center mt-12 bg-white p-10 rounded-2xl shadow-sm border border-slate-200">
+      <div className="max-w-xl mx-auto text-center mt-12 bg-white p-10 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
+        <LevelSelector />
         <Calculator size={48} className="mx-auto text-indigo-600 mb-6" />
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Math Sprint</h2>
         <p className="text-slate-600 mb-8">Ready? 60 seconds on the clock.</p>
@@ -55,7 +72,8 @@ export default function GamesPage() {
 
   const renderSyntaxSnipper = () => {
     return (
-      <div className="max-w-2xl mx-auto text-center mt-12 bg-white p-10 rounded-2xl shadow-sm border border-slate-200">
+      <div className="max-w-2xl mx-auto text-center mt-12 bg-white p-10 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
+        <LevelSelector />
         <Code size={48} className="mx-auto text-rose-500 mb-6" />
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Syntax Snipper</h2>
         <p className="text-slate-600 mb-8">Find the syntax error in the code below.</p>
@@ -78,7 +96,8 @@ export default function GamesPage() {
 
   const renderMemoryMatch = () => {
     return (
-      <div className="max-w-xl mx-auto text-center mt-12 bg-white p-10 rounded-2xl shadow-sm border border-slate-200">
+      <div className="max-w-xl mx-auto text-center mt-12 bg-white p-10 rounded-2xl shadow-sm border border-slate-200 relative overflow-hidden">
+        <LevelSelector />
         <Gamepad2 size={48} className="mx-auto text-indigo-600 mb-6" />
         <h2 className="text-2xl font-bold text-slate-900 mb-2">Memory Match</h2>
         <p className="text-slate-600 mb-8">Match the concepts to clear the board.</p>
@@ -119,9 +138,14 @@ export default function GamesPage() {
                 <div className={`p-2 rounded-lg ${game.category === 'Coding' ? 'bg-rose-100 text-rose-600' : game.category === 'Learning' ? 'bg-emerald-100 text-emerald-600' : 'bg-indigo-100 text-indigo-600'}`}>
                   {game.icon}
                 </div>
-                <span className="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 text-slate-600">
-                  {game.category}
-                </span>
+                <div className="flex flex-col items-end gap-1">
+                  <span className="text-xs font-semibold px-2 py-1 rounded-full bg-slate-100 text-slate-600">
+                    {game.category}
+                  </span>
+                  <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
+                    500 Levels
+                  </span>
+                </div>
               </div>
               <h3 className="text-lg font-bold text-slate-900 mb-2">{game.title}</h3>
               <p className="text-sm text-slate-600 mb-6">{game.desc}</p>

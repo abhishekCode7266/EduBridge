@@ -1,5 +1,4 @@
 "use client";
-
 import { useState, useEffect } from "react";
 import { Settings, User, BookOpen, CreditCard } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
@@ -10,7 +9,7 @@ export default function DevTools() {
   const { user } = useAuth();
 
   useEffect(() => {
-    // Also allow enabling via URL parameter (e.g. ?dev=true)
+    // Allow enabling via URL parameter (e.g. ?dev=true)
     const checkDevMode = () => {
       const urlParams = new URLSearchParams(window.location.search);
       if (urlParams.get('dev') === 'true') {
@@ -35,6 +34,7 @@ export default function DevTools() {
       }
     };
     
+    // Invisible trigger: 7 clicks on the background
     let clickCount = 0;
     let clickTimeout: NodeJS.Timeout;
     const handleBodyClick = (e: MouseEvent) => {
@@ -51,9 +51,10 @@ export default function DevTools() {
         clickCount = 0;
       }, 1000);
     };
-
+    
     window.addEventListener('keydown', handleKeyDown);
     document.body.addEventListener('click', handleBodyClick);
+    
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.removeEventListener('click', handleBodyClick);
@@ -99,7 +100,7 @@ export default function DevTools() {
               Role: {user?.role || 'None'} <br/>
               Paid: {user?.hasPaid ? <span className="text-emerald-400">Yes</span> : <span className="text-rose-400">No</span>}
             </div>
-
+            
             <button onClick={() => setBypass('student_free')} className="w-full text-left px-3 py-2 text-xs bg-slate-800 hover:bg-slate-700 rounded flex items-center gap-2">
               <User size={14} /> Bypass as Student (Free)
             </button>
@@ -109,6 +110,7 @@ export default function DevTools() {
             <button onClick={() => setBypass('teacher')} className="w-full text-left px-3 py-2 text-xs bg-slate-800 hover:bg-slate-700 rounded flex items-center gap-2">
               <BookOpen size={14} /> Bypass as Teacher
             </button>
+            
             <button onClick={() => setBypass('clear')} className="w-full text-left px-3 py-2 text-xs bg-rose-900/50 hover:bg-rose-900/80 text-rose-300 rounded mt-2">
               Clear All Bypasses
             </button>

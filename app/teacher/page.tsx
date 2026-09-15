@@ -9,8 +9,29 @@ import { collection, query, where, onSnapshot, doc, updateDoc, getDoc } from 'fi
 
 export default function TeacherDashboard() {
   const [pendingPayments, setPendingPayments] = useState<any[]>([]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+    
+    // Check bypass first
+    const isTeacherBypass = typeof window !== 'undefined' ? localStorage.getItem('teacher_bypass') === 'true' : false;
+    if (isTeacherBypass) {
+      setPendingPayments([
+        {
+          id: 'mock-1',
+          userId: 'mock-u1',
+          userName: 'Mock Student (Bypass)',
+          status: 'pending',
+          utrNumber: 'MOCK123456789',
+          amount: 499,
+          planName: 'Pro Plan'
+        }
+      ]);
+      return;
+    }
+
     // Listen for real pending payments
     const q = query(collection(db, "payment_requests"), where("status", "==", "pending"));
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -25,6 +46,13 @@ export default function TeacherDashboard() {
   }, []);
 
   const handleApprove = async (paymentId: string, userId: string) => {
+    const isTeacherBypass = typeof window !== 'undefined' ? localStorage.getItem('teacher_bypass') === 'true' : false;
+    if (isTeacherBypass) {
+      setPendingPayments(prev => prev.filter(p => p.id !== paymentId));
+      alert("Payment approved in bypass mode!");
+      return;
+    }
+
     try {
       // 1. Update the payment request status
       await updateDoc(doc(db, "payment_requests", paymentId), {
@@ -46,6 +74,13 @@ export default function TeacherDashboard() {
   };
 
   const handleReject = async (paymentId: string) => {
+    const isTeacherBypass = typeof window !== 'undefined' ? localStorage.getItem('teacher_bypass') === 'true' : false;
+    if (isTeacherBypass) {
+      setPendingPayments(prev => prev.filter(p => p.id !== paymentId));
+      alert("Payment rejected in bypass mode.");
+      return;
+    }
+
     try {
       await updateDoc(doc(db, "payment_requests", paymentId), {
         status: "rejected"
@@ -102,7 +137,7 @@ export default function TeacherDashboard() {
           <div className="rounded-2xl border bg-white p-6 shadow-sm">
             <h2 className="text-base font-bold text-slate-900 mb-6">Topic Performance Analysis (10th Math)</h2>
             <div className="h-72 w-full">
-              <ResponsiveContainer width="100%" height="100%">
+              {mounted && (<ResponsiveContainer width="100%" height="100%">
                 <BarChart
                   data={MOCK_CLASS_ANALYTICS.performanceByTopic}
                   margin={{ top: 5, right: 20, left: -20, bottom: 5 }}
@@ -131,7 +166,7 @@ export default function TeacherDashboard() {
                     barSize={40}
                   />
                 </BarChart>
-              </ResponsiveContainer>
+              </ResponsiveContainer>)}
             </div>
           </div>
 
