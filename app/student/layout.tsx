@@ -51,6 +51,10 @@ export default function StudentLayout({ children }: { children: React.ReactNode 
               <BarChart size={20} />
               Progress
             </Link>
+            <Link href="/student/settings" className="flex items-center gap-3 rounded-lg px-3 py-2 text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-medium transition-colors">
+              <Settings size={20} />
+              Settings
+            </Link>
           </nav>
 
           <div className="px-4 mt-8">
